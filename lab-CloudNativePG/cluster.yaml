@@ -1,0 +1,35 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cluster-example
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:13
+
+  storage:
+    size: 10Gi
+    storageClass: local-path
+
+  bootstrap:
+    initdb:
+      database: appdb
+      owner: postgres
+      secret:
+        name: cluster-example-superuser
+
+  postgresql:
+    parameters:
+      max_connections: "1000"
+      pgaudit.log: "all, -misc"
+      pgaudit.log_catalog: "off"
+      pgaudit.log_parameter: "on"
+      pgaudit.log_relation: "on"
+
+  superuserSecret:
+    name: cluster-example-superuser
+
+  certificates:
+    serverTLSSecret: cluster-example-server-tls
+    serverCASecret: cluster-example-server-tls
+    clientCASecret: cluster-example-server-tls
+    replicationTLSSecret: cluster-example-server-tls

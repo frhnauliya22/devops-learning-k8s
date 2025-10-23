@@ -1,0 +1,18 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: pooler-example-rw
+spec:
+  cluster:
+    name: cluster-example
+  instances: 1                # cukup 1 Pod untuk lab single-node
+  type: rw
+  serviceTemplate:
+    spec:
+      type: NodePort
+  pgbouncer:
+    poolMode: session
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "10"
+
